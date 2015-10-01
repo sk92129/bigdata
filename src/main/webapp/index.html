@@ -26,7 +26,8 @@
 <div ng-controller="BasicCtrl1">
   Showing data across USA
   <br/>
-  <map center="41.850033,-87.6500523" zoom="3">
+  
+  <map center="32.873047,-117.217604" zoom="7">
 
 
     <info-window id="foo">
@@ -38,10 +39,27 @@
       </div>
     </info-window>
 
+    <info-window id="incidentWindow">
+      <div ng-non-bindable="">
+        Lat/Lng: {{this.getPosition()}}<br/>
+        <ul>
+          <li ng-repeat='item in store.items'>{{item}}</li>
+        </ul>
+      </div>
+    </info-window>
+
+<!-- 
     <marker ng-repeat="(id, store) in stores" id="{{id}}"
             position="{{store.position}}"
             on-click="showStore(event, id)"
             ></marker>
+ -->
+ 
+ 
+    <marker ng-repeat="incident in incidents" 
+            position="[{{incident.lat}},{{incident.lon}}]"
+            on-click="showIncident(event, incident.name)"
+            >  </marker>
 
   </map>
 </div>

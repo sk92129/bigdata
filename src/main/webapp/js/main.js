@@ -6,9 +6,23 @@
 
 
 var app = angular.module('myApp', ['ngMap']);
-app.controller('BasicCtrl1', function($scope, $compile) {
+app.controller('BasicCtrl1', function($scope, $compile, $http) {
     var TILE_SIZE = 256;
 
+    console.log("initialize app");
+    
+	$http({
+		method: 'GET',
+		url: '/bigwebapp/restws/incidents/'
+	}).success(function(data, status) {
+		console.log(data);
+		$scope.incidents = data;
+	}).error(function(data, status) {
+		// Some error occurred
+		console.log('error '+ status);
+	});
+
+    
     $scope.stores = {
         foo: { position:[41, -87], items: [1,2,3,4]},
         bar:{ position:[41, -83], items: [5,6,7,8]}
@@ -16,6 +30,10 @@ app.controller('BasicCtrl1', function($scope, $compile) {
     $scope.showStore = function(evt, id) {
         $scope.store = $scope.stores[id];
         $scope.showInfoWindow.apply(this, [evt, 'foo']);
+    };
+
+    $scope.showIncident = function(evt, infomation) {
+        $scope.showInfoWindow.apply(this, [evt, 'incidentWindow']);
     };
 
     function bound(value, opt_min, opt_max) {
@@ -66,6 +84,7 @@ app.controller('BasicCtrl1', function($scope, $compile) {
     };
 
     $scope.$on('mapInitialized', function(event, map) {
+    	console.log("map initialized");
         var numTiles = 1 << map.getZoom();
         var projection = new MercatorProjection();
         $scope.chicago = map.getCenter();
